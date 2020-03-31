@@ -56,14 +56,20 @@ function insertarCurso(curso) {
 function eliminarCurso(e) {
     e.preventDefault();
 
-    let curso;
+    let curso, cursoId;
     if (e.target.classList.contains('borrar-curso')) {
         e.target.parentElement.parentElement.remove();
+        curso = e.target.parentElement.parentElement;
+        cursoId = curso.querySelector('a').getAttribute('data-id');
     }
+
+    eliminarCursoLocalStorage(cursoId);
 }
 
 function vaciarCarrito () {
     listaCursos.innerHTML = '';
+
+    vaciarLocalStorage();
     return false;
 }
 
@@ -106,4 +112,21 @@ function leerLocalStorage() {
         `;
         listaCursos.appendChild(row);
     });
+}
+
+function eliminarCursoLocalStorage(curso) {
+    let cursosLS;
+    cursosLS = obtenerCursosLocalStorage();
+
+    cursosLS.forEach(function(cursoLS, index){
+        if (cursoLS.id === curso) {
+            cursosLS.splice(index, 1);
+        }
+    });
+
+    localStorage.setItem('cursos', JSON.stringify(cursosLS));
+}
+
+function vaciarLocalStorage() {
+    localStorage.clear();
 }
